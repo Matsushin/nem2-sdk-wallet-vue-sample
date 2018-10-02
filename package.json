@@ -29,7 +29,9 @@
     "@types/lodash": "^4.14.115",
     "apostille-library": "^5.0.0",
     "crypto-js": "^3.1.9-1",
+    "encoding-japanese": "^1.0.29",
     "js-sha3": "^0.7.0",
+    "localforage": "^1.7.2",
     "lodash": "^4.17.10",
     "nem-sdk": "^1.6.7",
     "nem2-sdk": "^0.10.1",
@@ -39,7 +41,11 @@
     "vue": "^2.5.16",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^7.0.0",
+    "vue-qrcode-reader": "^1.2.2",
+    "vue-qriously": "^1.1.1",
     "vue-router": "^3.0.1",
+    "vue2-toast": "^2.0.2",
+    "vuetify": "^1.2.5",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

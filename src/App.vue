@@ -1,29 +1,65 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/demo">Demo</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <header>
+      <span>{{ title }} </span>
+    </header>
+    <main>
+      <Wallet/>
+    </main>
+  </v-app>
 </template>
 
+<script lang="ts">
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import Wallet from './components/Wallet.vue';
+
+@Component({
+  name: 'app',
+  components: {
+    Wallet
+  }
+})
+
+export default class App extends Vue {
+  private title = 'My NEM wallet'
+  mounted () {}
+}
+</script>
+
 <style lang="scss">
+body {
+  margin: 0;
+}
+ 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+ 
+main {
+  text-align: center;
+  margin-top: 40px;
+}
+ 
+header {
+  margin: 0;
+  height: 56px;
+  padding: 0 16px 0 24px;
+  background-color: #35495E;
+  color: #ffffff;
+}
+ 
+header span {
+  display: block;
+  position: relative;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: .02em;
+  font-weight: 400;
+  box-sizing: border-box;
+  padding-top: 16px;
 }
 </style>
