@@ -1,65 +1,36 @@
 <template>
-  <v-app>
-    <header>
-      <span>{{ title }} </span>
-    </header>
-    <main>
-      <Wallet/>
-    </main>
-  </v-app>
+  <div id="app">
+     <v-app>
+        <v-toolbar>
+          <v-toolbar-title>Nem2 SDK Wallet Vue Sample</v-toolbar-title>
+        </v-toolbar>
+        <main>
+          <v-flex xs12 sm6 offset-sm1>
+            <v-container fluid>
+                <router-view></router-view>
+            </v-container>
+          </v-flex>
+        </main>
+      </v-app>
+  </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import Wallet from './components/Wallet.vue';
-
-@Component({
-  name: 'app',
-  components: {
-    Wallet
-  }
-})
-
-export default class App extends Vue {
-  private title = 'My NEM wallet'
-  mounted () {}
-}
-</script>
-
 <style lang="scss">
-body {
-  margin: 0;
-}
- 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
- 
-main {
-  text-align: center;
-  margin-top: 40px;
+#nav {
+  padding: 30px;
+  a {
+    font-weight: bold;
+    color: #2c3e50;
+    &.router-link-exact-active {
+      color: #42b983;
+    }
+  }
 }
- 
-header {
-  margin: 0;
-  height: 56px;
-  padding: 0 16px 0 24px;
-  background-color: #35495E;
-  color: #ffffff;
-}
- 
-header span {
-  display: block;
-  position: relative;
-  font-size: 20px;
-  line-height: 1;
-  letter-spacing: .02em;
-  font-weight: 400;
-  box-sizing: border-box;
-  padding-top: 16px;
-}
+
 </style>
