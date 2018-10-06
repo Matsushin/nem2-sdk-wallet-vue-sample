@@ -2,10 +2,13 @@ import { AccountHttp, MosaicHttp, NamespaceHttp, MosaicService, Address, XEM, Pl
         SimpleWallet, Password, NetworkType, Account, TransferTransaction, Deadline } from 'nem2-sdk';
 import { filter, mergeMap } from 'rxjs/operators';
 import localForage from 'localforage';
-import { dispatch } from 'rxjs/internal/observable/pairs';
 
 const API_URL = 'http://catapult-test.44uk.net:3000/';
 const WALLET_KEY = 'wallet';
+interface Wallet {
+    address: string;
+    privateKey: string;
+}
 
 export default {
     namespaced: true,
@@ -31,7 +34,7 @@ export default {
         },
     },
     mutations: {
-        setWallet(state: any, wallet: object) {
+        setWallet(state: any, wallet: Wallet) {
             state.address = wallet.address;
             state.privateKey = wallet.privateKey;
         },
@@ -47,7 +50,7 @@ export default {
     },
     actions: {
         async loadOrCreateWallet({ dispatch, commit }) {
-            const walletInfo: object = await localForage.getItem(WALLET_KEY);
+            const walletInfo: Wallet = await localForage.getItem(WALLET_KEY);
             if (walletInfo !== null) {
                 commit('setWallet', walletInfo);
             } else {
