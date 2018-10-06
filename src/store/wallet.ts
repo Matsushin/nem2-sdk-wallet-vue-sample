@@ -1,7 +1,7 @@
 import { AccountHttp, MosaicHttp, NamespaceHttp, MosaicService, Address, XEM, PlainMessage, TransactionHttp,
         SimpleWallet, Password, NetworkType, Account, TransferTransaction, Deadline } from 'nem2-sdk';
 import { filter, mergeMap } from 'rxjs/operators';
-import localForage from 'localforage';
+import * as localForage from 'localforage';
 
 const API_URL = 'http://catapult-test.44uk.net:3000/';
 const WALLET_KEY = 'wallet';
@@ -49,37 +49,38 @@ export default {
         },
     },
     actions: {
-        async loadOrCreateWallet({ dispatch, commit }) {
-            const walletInfo: Wallet = await localForage.getItem(WALLET_KEY);
+        async loadOrCreateWallet({ dispatch, commit }: { dispatch: any, commit: any }) {
+            const walletInfo: Wallet | {} = await localForage.getItem(WALLET_KEY);
             if (walletInfo !== null) {
                 commit('setWallet', walletInfo);
             } else {
                 dispatch('createWallet');
             }
         },
-        async createWallet({ commit }) {
+        async createWallet({ commit }: { commit: any }) {
             const password = new Password('password');
             const wallet = SimpleWallet.create(WALLET_KEY, password, NetworkType.MIJIN_TEST);
+            const encryptedPrivateKey: any = wallet.encryptedPrivateKey;
             const walletInfo = {
                 address: wallet.address.plain(),
-                privateKey: wallet.encryptedPrivateKey.decrypt(password),
+                privateKey: encryptedPrivateKey.decrypt(password),
             };
             localForage.setItem(WALLET_KEY, walletInfo);
             commit('setWallet', walletInfo);
         },
-        async getBalance({ commit }) {
+        async getBalance({ commit }: { commit: any }, address: string) {
             const accountHttp = new AccountHttp(API_URL);
             const mosaicHttp = new MosaicHttp(API_URL);
             const namespaceHttp = new NamespaceHttp(API_URL);
             const mosaicService = new MosaicService(accountHttp, mosaicHttp, namespaceHttp);
-            mosaicService.mosaicsAmountViewFromAddress(Address.createFromRawAddress(this.state.wallet.address)).pipe(
+            mosaicService.mosaicsAmountViewFromAddress(Address.createFromRawAddress(address)).pipe(
                 mergeMap((_) => _),
                 filter((mo) => mo.fullName() === 'nem:xem'),
             ).subscribe((data) => {
                 commit('setBalance', data.amount.lower / 10 ** 6);
             });
         },
-        sendXem({ commit }, payload: any) {
+        sendXem({ commit }: { commit: any }, payload: any) {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 Address.createFromRawAddress(payload.toAddress),
@@ -87,7 +88,7 @@ export default {
                 PlainMessage.create(payload.toMessage),
                 NetworkType.MIJIN_TEST,
             );
-            const account = Account.createFromPrivateKey(this.state.wallet.privateKey, NetworkType.MIJIN_TEST);
+            const account = Account.createFromPrivateKey(payload.privateKey, NetworkType.MIJIN_TEST);
             const signedTransaction = account.sign(transferTransaction);
             const transactionHttp = new TransactionHttp(API_URL);
             transactionHttp.announce(signedTransaction).subscribe(

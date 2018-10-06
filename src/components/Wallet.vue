@@ -101,7 +101,7 @@ export default class Wallet extends Vue {
 
     private async getBalance() {
         this.isLoading = true;
-        await this.$store.dispatch('wallet/getBalance');
+        await this.$store.dispatch('wallet/getBalance', this.$store.state.wallet.address);
         this.isLoading = false;
     }
 
@@ -111,6 +111,7 @@ export default class Wallet extends Vue {
                 toAddress: this.toAddress,
                 toAmount: this.toAmount,
                 toMessage: this.toMessage,
+                privateKey: this.$store.state.wallet.privateKey,
             };
             this.$store.dispatch('wallet/sendXem', payload);
         }
