@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.4.1/workbox-sw.js");
 
 importScripts(
-  "/nem2-sdk-wallet-vue-sample/precache-manifest.71ac91645d847d3b828ccbfffd57ba76.js"
+  "/nem2-sdk-wallet-vue-sample/precache-manifest.c01bd7f68113f5c6c93575a0bdb76c13.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "catapult-vue"});
