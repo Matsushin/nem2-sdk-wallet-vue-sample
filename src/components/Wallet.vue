@@ -1,12 +1,16 @@
 <template>
   <div class="wallet">
     <div v-if="address != ''">
-        <v-card-text>アドレス：{{address}}</v-card-text>
-        <v-card-text>残高：{{ balance }} xem</v-card-text>
+        <h2 class="mt-5 mb-2">アカウント情報</h2>
+        <p>アドレス：{{address}}</p>
+        <p>
+            残高：{{ balance }} xem
+            <v-btn fab small flat @click="getBalance()" :loading="isLoading"><v-icon>cached</v-icon></v-btn>
+        </p>
         <div v-for="(item, index) in validation" :key="index" class="errorLabel">
             <div v-if="item!==true">{{ item }}</div>
         </div>
-        <v-card-title><b>送金</b></v-card-title>
+        <h2 class="mt-5 mb-2">送金</h2>
             <v-text-field
                 label="送金先"
                 v-model="toAddress"
@@ -29,7 +33,7 @@
         <v-flex>
             <v-btn color="blue" class="white--text" @click="tapSend()">XEMを送金する</v-btn>
         </v-flex>
-        <h2 class="mt-5">送金結果</h2>
+        <h2 class="mt-5 mb-2">送金結果</h2>
         <div v-if="successMessage != ''">
             <v-alert
             :value="true"
@@ -48,11 +52,13 @@
         </div>
     </div>
     <div v-else>
-        <v-progress-circular
-            indeterminate
-            color="primary"
-        ></v-progress-circular>
-        <p>ウォレット情報を作成または取得中...</p>
+        <div class="mt-5 ml-5">
+            <v-progress-circular
+                indeterminate
+                color="primary"
+            ></v-progress-circular>
+        </div>
+        <p class="mt-5">ウォレット情報を作成または取得中...</p>
     </div>
   </div>
 </template>
@@ -82,6 +88,7 @@ import { mapGetters } from 'vuex';
   },
 })
 export default class Wallet extends Vue {
+    private isLoading: boolean = false;
     private toAmount: number = 0;
     private toAddress: string = '';
     private toMessage: string = '';
@@ -89,7 +96,13 @@ export default class Wallet extends Vue {
 
     private async created() {
         await this.$store.dispatch('wallet/loadOrCreateWallet');
+        this.getBalance();
+    }
+
+    private async getBalance() {
+        this.isLoading = true;
         await this.$store.dispatch('wallet/getBalance');
+        this.isLoading = false;
     }
 
     private tapSend() {
