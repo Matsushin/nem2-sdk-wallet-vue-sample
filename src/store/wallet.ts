@@ -2,8 +2,10 @@ import { AccountHttp, MosaicHttp, NamespaceHttp, MosaicService, Address, XEM, Pl
         SimpleWallet, Password, NetworkType, Account, TransferTransaction, Deadline } from 'nem2-sdk';
 import { filter, mergeMap } from 'rxjs/operators';
 import localForage from 'localforage';
+import { dispatch } from 'rxjs/internal/observable/pairs';
 
 const API_URL = 'http://catapult-test.44uk.net:3000/';
+const WALLET_KEY = 'wallet';
 
 export default {
     namespaced: true,
@@ -29,11 +31,9 @@ export default {
         },
     },
     mutations: {
-        setAddress(state: any, address: string) {
-            state.address = address;
-        },
-        setPrivateKey(state: any, privateKey: string) {
-            state.privateKey = privateKey;
+        setWallet(state: any, wallet: object) {
+            state.address = wallet.address;
+            state.privateKey = wallet.privateKey;
         },
         setBalance(state: any, balance: number) {
             state.balance = balance;
@@ -46,34 +46,35 @@ export default {
         },
     },
     actions: {
-        async loadWallet({ commit }) { 
-            let key = 'wallet';
-            let result:any = await localForage.getItem(key);
-            if (result !== null) {
-                commit('setAddress', result.address);
-                commit('setPrivateKey', result.privateKey);
-                const accountHttp = new AccountHttp(API_URL);
-                const mosaicHttp = new MosaicHttp(API_URL);
-                const namespaceHttp = new NamespaceHttp(API_URL);
-                const mosaicService = new MosaicService(accountHttp, mosaicHttp, namespaceHttp);
-                mosaicService.mosaicsAmountViewFromAddress(Address.createFromRawAddress(result.address)).pipe(
-                    mergeMap(_ => _),
-                    filter(mo => mo.fullName() === 'nem:xem')
-                ).subscribe((data) => {
-                    commit('setBalance', data.amount.lower / 10 ** 6);
-                });
+        async loadOrCreateWallet({ dispatch, commit }) {
+            const walletInfo: object = await localForage.getItem(WALLET_KEY);
+            if (walletInfo !== null) {
+                commit('setWallet', walletInfo);
             } else {
-                const password = new Password('password');
-                const wallet = SimpleWallet.create('wallet', password, NetworkType.MIJIN_TEST);
-                const walletInfo = {
-                    address: wallet.address.address,
-                    privateKey: wallet.encryptedPrivateKey.decrypt(password),
-                };
-                let key = 'wallet';
-                await localForage.setItem(key, walletInfo);
-                commit('setAddress', walletInfo.address);
-                commit('setPrivateKey', walletInfo.privateKey);
+                dispatch('createWallet');
             }
+        },
+        async createWallet({ commit }) {
+            const password = new Password('password');
+            const wallet = SimpleWallet.create(WALLET_KEY, password, NetworkType.MIJIN_TEST);
+            const walletInfo = {
+                address: wallet.address.plain(),
+                privateKey: wallet.encryptedPrivateKey.decrypt(password),
+            };
+            localForage.setItem(WALLET_KEY, walletInfo);
+            commit('setWallet', walletInfo);
+        },
+        async getBalance({ commit }) {
+            const accountHttp = new AccountHttp(API_URL);
+            const mosaicHttp = new MosaicHttp(API_URL);
+            const namespaceHttp = new NamespaceHttp(API_URL);
+            const mosaicService = new MosaicService(accountHttp, mosaicHttp, namespaceHttp);
+            mosaicService.mosaicsAmountViewFromAddress(Address.createFromRawAddress(this.state.wallet.address)).pipe(
+                mergeMap((_) => _),
+                filter((mo) => mo.fullName() === 'nem:xem'),
+            ).subscribe((data) => {
+                commit('setBalance', data.amount.lower / 10 ** 6);
+            });
         },
         sendXem({ commit }, payload: any) {
             const transferTransaction = TransferTransaction.create(
@@ -87,13 +88,13 @@ export default {
             const signedTransaction = account.sign(transferTransaction);
             const transactionHttp = new TransactionHttp(API_URL);
             transactionHttp.announce(signedTransaction).subscribe(
-                res => {
+                (res) => {
                     commit('setMessage', res.message);
                 },
-                err => {
+                (err) => {
                     commit('setError', err.toString());
-                }
+                },
             );
         },
     },
-}
+};

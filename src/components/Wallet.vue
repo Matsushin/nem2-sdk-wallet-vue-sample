@@ -64,34 +64,35 @@ import { mapGetters } from 'vuex';
 @Component({
   data: () => ({
     rules: {
-      senderAddrLimit: (value:string) => (value && (value.length === 46 || value.length === 40)) || '送金先アドレス(-除く)は40文字です。',
-      senderAddrInput: (value:string) => {
-        const pattern = /^[a-zA-Z0-9-]+$/
-        return pattern.test(value) || '送金先の入力が不正です'
+      senderAddrLimit: (value: string) => (value && (value.length === 46 || value.length === 40)) || '送金先アドレス(-除く)は40文字です。',
+      senderAddrInput: (value: string) => {
+        const pattern = /^[a-zA-Z0-9-]+$/;
+        return pattern.test(value) || '送金先の入力が不正です';
       },
-      amountLimit: (value:number) => (value >= 0) || '数量を入力してください',
-      amountInput: (value:string) => {
-        const pattern = /^[0-9.]+$/ //※ブログ上ではちゃんと表示されないため、実装の際はこのコメントアウトを外してください
-        return (pattern.test(value) && !isNaN(Number(value))) || '数量の入力が不正です'
+      amountLimit: (value: number) => (value >= 0) || '数量を入力してください',
+      amountInput: (value: string) => {
+        const pattern = /^[0-9.]+$/;
+        return (pattern.test(value) && !isNaN(Number(value))) || '数量の入力が不正です';
       },
-      messageRules: (value:string) => (value.length <= 1024) || 'メッセージの最大文字数が超えています。'
-    }
+      messageRules: (value: string) => (value.length <= 1024) || 'メッセージの最大文字数が超えています。',
+    },
   }),
   computed: {
       ...mapGetters({ address: 'wallet/address', balance: 'wallet/balance', successMessage: 'wallet/message', errorMessage: 'wallet/error' }),
-  }
+  },
 })
 export default class Wallet extends Vue {
-    toAmount:number = 0;
-    toAddress:string = '';
-    toMessage:string = '';
-    validation:Array<any> = [];
+    private toAmount: number = 0;
+    private toAddress: string = '';
+    private toMessage: string = '';
+    private validation: any[] = [];
 
-    created() {
-        this.$store.dispatch('wallet/loadWallet');
+    private async created() {
+        await this.$store.dispatch('wallet/loadOrCreateWallet');
+        await this.$store.dispatch('wallet/getBalance');
     }
 
-    tapSend() {
+    private tapSend() {
         if (this.isValidation() === true) {
             const payload = {
                 toAddress: this.toAddress,
@@ -102,17 +103,17 @@ export default class Wallet extends Vue {
         }
     }
 
-    isValidation() {
+    private isValidation() {
         this.validation = [];
         this.validation.push(this.$data.rules.senderAddrLimit(this.toAddress));
         this.validation.push(this.$data.rules.senderAddrInput(this.toAddress));
         this.validation.push(this.$data.rules.amountLimit(this.toAmount));
         this.validation.push(this.$data.rules.amountInput(this.toAmount));
         this.validation.push(this.$data.rules.messageRules(this.toMessage));
-        let isError:Boolean = false;
-        this.validation.forEach((obj:any) => {
-        if (obj !== true) { isError = true }
-        })
+        let isError: boolean = false;
+        this.validation.forEach((obj: any) => {
+            if (obj !== true) { isError = true; }
+        });
         return !isError;
     }
 }
