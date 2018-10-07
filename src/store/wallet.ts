@@ -3,7 +3,7 @@ import { AccountHttp, MosaicHttp, NamespaceHttp, MosaicService, Address, XEM, Pl
 import { filter, mergeMap } from 'rxjs/operators';
 import * as localForage from 'localforage';
 
-const API_URL = 'https://catapult-test.44uk.net:3000';
+const API_URL = 'http://cataput-test.daoka.ml:3000';
 const WALLET_KEY = 'wallet';
 interface Wallet {
     address: string;
