@@ -2,7 +2,7 @@
   <div id="app">
      <v-app>
         <v-toolbar>
-          <v-toolbar-title>Nem2 SDK Wallet Vue Sample</v-toolbar-title>
+          <v-toolbar-title>NEM2 SDK Wallet Vue Sample</v-toolbar-title>
         </v-toolbar>
         <main>
           <v-flex xs12 sm6 offset-sm1>

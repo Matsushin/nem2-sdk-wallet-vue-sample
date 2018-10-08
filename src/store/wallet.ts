@@ -84,7 +84,7 @@ export default {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 Address.createFromRawAddress(payload.toAddress),
-                [XEM.createRelative(parseInt(payload.toAmount, 10))],
+                [XEM.createRelative(parseFloat(payload.toAmount))],
                 PlainMessage.create(payload.toMessage),
                 NetworkType.MIJIN_TEST,
             );

@@ -8,15 +8,15 @@ self.__precacheManifest = [
     "url": "/nem2-sdk-wallet-vue-sample/js/chunk-vendors.c9937f20.js"
   },
   {
-    "revision": "24644ccb05826dea75a5",
-    "url": "/nem2-sdk-wallet-vue-sample/js/app.24644ccb.js"
+    "revision": "d6e89d4459ce0a9fa05f",
+    "url": "/nem2-sdk-wallet-vue-sample/js/app.d6e89d44.js"
   },
   {
-    "revision": "1c239ec1d199a20a5949799b80ae5a85",
+    "revision": "1df61d525b8061d83ecc8c37a665e94b",
     "url": "/nem2-sdk-wallet-vue-sample/index.html"
   },
   {
-    "revision": "24644ccb05826dea75a5",
+    "revision": "d6e89d4459ce0a9fa05f",
     "url": "/nem2-sdk-wallet-vue-sample/css/app.4a2ebeaf.css"
   }
 ];
