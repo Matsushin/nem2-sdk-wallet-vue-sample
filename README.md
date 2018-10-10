@@ -1,6 +1,6 @@
 # nem2-sdk-wallet-vue-sample
-NEM2ウォレットアプリ。nem2-sdkライブラリを用いて実装。
-機能としてはウォレット作成、残高取得、XEM送金ができる。
+- NEM2ウォレットアプリ。nem2-sdkライブラリを用いて実装。
+- 機能としてはウォレット作成、残高取得、XEM送金ができる。
 
 ## プロジェクトのテンプレート
 - [Catapult-Vue](https://github.com/luxtagofficial/Catapult-Vue)
