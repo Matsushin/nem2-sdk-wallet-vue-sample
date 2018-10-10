@@ -1,28 +1,15 @@
-# Catapult-vue
-<p align="center">
-  <img alt="Logo" src="./src/assets/logo.png" height="200" />
-  <p align="center">
-    <a href="https://travis-ci.org/luxtagofficial/Catapult-Vue"><img src="https://travis-ci.org/luxtagofficial/Catapult-Vue.svg?branch=master"></a>
-    <a href="https://codecov.io/gh/luxtagofficial/Catapult-Vue">
-    <img src="https://codecov.io/gh/luxtagofficial/Catapult-Vue/branch/master/graph/badge.svg" />
-    </a>
-  </p>
-</p>
+# nem2-sdk-wallet-vue-sample
+NEM2ウォレットアプリ。
+nem2-sdkライブラリを用いてウォレット作成、残高取得、XEM送金ができます。
 
-An opininated blockchain starter kit for vue.
+# プロジェクトのテンプレート
+- [Catapult-Vue](https://github.com/luxtagofficial/Catapult-Vue)
 
-# Project setup
-You can use this repo by cloning it to your local machine in a new folder as follow
+> A Vue.js project
+
+## Build Setup
+
 ```bash
-git init
-git clone https://github.com/luxtagofficial/Catapult-Vue.git
-```
-Once done you need to point the remote origin to your own git repository
-```bash
-git remote set-url origin https://github.com/USERNAME/REPOSITORY.git
-```
-At this point you need to install the dependencies
-```
 yarn install
 ```
 
