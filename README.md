@@ -2,7 +2,7 @@
 NEM2ウォレットアプリ。
 nem2-sdkライブラリを用いてウォレット作成、残高取得、XEM送金ができます。
 
-# プロジェクトのテンプレート
+## プロジェクトのテンプレート
 - [Catapult-Vue](https://github.com/luxtagofficial/Catapult-Vue)
 
 > A Vue.js project
