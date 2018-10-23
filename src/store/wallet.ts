@@ -2,6 +2,7 @@ import { AccountHttp, MosaicHttp, NamespaceHttp, MosaicService, Address, XEM, Pl
         SimpleWallet, Password, NetworkType, Account, TransferTransaction, Deadline } from 'nem2-sdk';
 import { filter, mergeMap } from 'rxjs/operators';
 import * as localForage from 'localforage';
+import axios from 'axios';
 
 const API_URL = 'http://catapult48gh23s.xyz:3000';
 const WALLET_KEY = 'wallet';
@@ -92,8 +93,22 @@ export default {
             const signedTransaction = account.sign(transferTransaction);
             const transactionHttp = new TransactionHttp(API_URL);
             transactionHttp.announce(signedTransaction).subscribe(
-                (res) => {
-                    commit('setMessage', res.message);
+                () => {
+                    setTimeout(() => {
+                        const statusUrl = `${API_URL}/transaction/${signedTransaction.hash}/status`;
+                        axios.get(statusUrl).then(
+                            (res) => {
+                                if (res.data.group === 'unconfirmed') {
+                                    commit('setMessage', res.data.status);
+                                } else {
+                                    commit('setError', res.data.status);
+                                }
+                            },
+                            (err) => {
+                                commit('setError', err.toString());
+                            },
+                        );
+                        }, 1000);
                 },
                 (err) => {
                     commit('setError', err.toString());
