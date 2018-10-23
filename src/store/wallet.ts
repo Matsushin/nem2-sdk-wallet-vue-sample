@@ -4,7 +4,7 @@ import { filter, mergeMap } from 'rxjs/operators';
 import * as localForage from 'localforage';
 import axios from 'axios';
 
-const API_URL = 'http://catapult48gh23s.xyz:3000';
+const API_URL = 'https://planethouki.ddns.net:3000';
 const WALLET_KEY = 'wallet';
 interface Wallet {
     address: string;
